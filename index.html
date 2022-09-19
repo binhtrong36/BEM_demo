@@ -9,63 +9,94 @@
 
 </head>
 <body>
-    <div>
-        <!-- success -->
-        <div class="toast toast--success">   
-            <div class="toast__icon">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div class="toast__body">
-                <h3 class="toast__title">SUCCESS</h3>
-                <p>
-                    Tags: css, font, icons, fontawesome, webfont, svg-icons, svg-sprites</p>
-            </div>
-            <div class="toast__closed">
-                <i class="fa-solid fa-xmark"></i>
-            </div>
-        </div>
-        <!-- Info -->
-        <div class="toast toast--info">   
-            <div class="toast__icon">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div class="toast__body">
-                <h3 class="toast__title">INFO</h3>
-                <p>
-                    Tags: css, font, icons, fontawesome, webfont, svg-icons, svg-sprites</p>
-            </div>
-            <div class="toast__closed">
-                <i class="fa-solid fa-xmark"></i>
-            </div>
-        </div>
-        <!-- Warn -->
-        <div class="toast toast--warn">   
-            <div class="toast__icon">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div class="toast__body">
-                <h3 class="toast__title">WARN</h3>
-                <p>
-                    Tags: css, font, icons, fontawesome, webfont, svg-icons, svg-sprites</p>
-            </div>
-            <div class="toast__closed">
-                <i class="fa-solid fa-xmark"></i>
-            </div>
-        </div>
-        <!-- Error -->
-        <div class="toast toast--error">   
-            <div class="toast__icon">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div class="toast__body">
-                <h3 class="toast__title">ERROR</h3>
-                <p>
-                    Tags: css, font, icons,</p>
-            </div>
-            <div class="toast__closed">
-                <i class="fa-solid fa-xmark"></i>
-            </div>
-        </div>
+    <div id="toast">
+    
     </div>
+    <div class="nav">
+       
+        <div onclick="showSuccessToast();", class="btn btn--success">Show Success Toast</div>
+        <div onclick="showErrorToast();", class="btn btn--error">Show Error Toast</div>
+        
+    </div>
+
+    <!-- viết javascript -->
+    <script>
+        // toast funciton
+        function toast({
+            title = '',
+            message = '',
+            type = 'info',
+            duuration = 1000
+        }) {
+            const main = document.getElementById('toast');
+            if(main){
+                // tạo div 
+                const toast = document.createElement('div');
+
+                // Auto remove tosast
+                const autoRemoveId = setTimeout(function() {
+                    main.removeChild(toast);
+                },duuration +1000);
+
+                // remove toast when clicked
+                toast.onclick = function(e) {
+                    // console.log(e.target);
+                    if(e.target.closest('.toast__closed')){
+                        main.removeChild(toast);
+                        clearTimeout(autoRemoveId);
+                    }
+
+                }
+                // cac icon
+                const icons = {
+                    success: 'fa-sharp fa-solid fa-circle-check',
+                    info: 'fa-sharp fa-solid fa-circle-info',
+                    warning: 'fa-sharp fa-solid fa-circle-exclamation',
+                    error: 'fa-sharp fa-solid fa-circle-exclamation'
+                };
+                    const icon = icons[type];
+                    const delay = (duuration / 1000).toFixed(2);
+                // tạo class
+                toast.classList.add('toast',`toast--${type}`);
+                // add animaiton
+                toast.style.animation =`slideInLeft ease .8s , fadeOut linear 1s ${delay}s forwards`;
+                // đặt nhóm con html còn lại vào class
+                toast.innerHTML =`
+                    <div class="toast__icon">
+                        <i class="${icon}"></i>
+                    </div>
+                    <div class="toast__body">
+                         <h3 class="toast__title">${title}</h3>
+                    <p class="toast_msg">${message}</p>
+                    </div>
+                    <div class="toast__closed">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                `;
+                // ném toast vòo main
+                main.appendChild(toast)
+
+               
+            }
+        }
+        
+
+            function showSuccessToast() {
+                toast({
+                    title:'Thành công',
+                    message:' bạn đã đăng ký thành công',
+                    type:'success',
+                    duuration:5000
+        })
+            }
+        function showErrorToast() {
+            toast({
+                title:'Thất bại ',
+                message:'bạn đã đăng ký thất bại , cần liên hiện admin',
+                type:'error',
+                duuration:5000
+        })
+        }
+    </script>
 </body>
 </html>
